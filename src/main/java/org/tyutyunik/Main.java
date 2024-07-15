@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -17,23 +19,71 @@ public class Main {
         String reportName;
 
         // File paths
-        if (args.length != 3) {
-            // Origin paths
-            pathSource = "/home/daniltyutyunik/data.csv";
-            pathOutput = "/home/daniltyutyunik/data.html";
-            reportName = "Report_name";
-            System.out.println("[INFO] Was accepted origin arg values. Only for test");
-        } else {
-            // Args path. Path must be without special symbols
-            pathSource = args[0];
-            pathOutput = args[1];
-            reportName = args[2];
+        switch (args.length) {
+            case 0:
+                // Getting path source
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("[ACT] Enter value pathSource: ");
+
+                while (!scanner.hasNextLine()) {
+                    // Wait for user input. Do nothing while waiting for input
+                }
+                pathSource = scanner.nextLine();
+
+                // Try to read
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(pathSource));
+                } catch (IOException e) {
+                    System.out.println("[EXCEPTION] There is no way to read the file.");
+                    e.printStackTrace();
+                    throw new RuntimeException();
+                }
+
+                // Getting path output
+                scanner = new Scanner(System.in);
+                System.out.print("[ACT] Enter value pathOutput: ");
+
+                while (!scanner.hasNextLine()) {
+                    // Wait for user input. Do nothing while waiting for input
+                }
+                pathOutput = scanner.nextLine();
+
+                // Getting report name
+                scanner = new Scanner(System.in);
+                System.out.print("[ACT] Enter value reportName: ");
+                while (!scanner.hasNextLine()) {
+                    // Wait for user input. Do nothing while waiting for input
+                }
+                reportName = scanner.nextLine();
+
+                System.out.printf("[INFO] Input three arguments: csvFilePath [%s] and htmlFilePath [%s] with reportName [%s]\n", pathSource, pathOutput, reportName);
+
+                // Payload
+                convertCsvToHtml(pathSource, pathOutput, reportName, marginIsExist, columnDelimiterSymbol, rowDelimiterSymbol);
+                break;
+            case 3:
+                // Args path. Path must be without special symbols
+                pathSource = args[0];
+                pathOutput = args[1];
+                reportName = args[2];
+
+                // Try to read
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(pathSource));
+                } catch (IOException e) {
+                    System.out.println("[EXCEPTION] There is no way to read the file.");
+                    e.printStackTrace();
+                    throw new RuntimeException();
+                }
+
+                System.out.printf("[INFO] Input three arguments: csvFilePath [%s] and htmlFilePath [%s] with reportName [%s]\n", pathSource, pathOutput, reportName);
+
+                // Payload
+                convertCsvToHtml(pathSource, pathOutput, reportName, marginIsExist, columnDelimiterSymbol, rowDelimiterSymbol);
+                break;
+            default:
+                System.out.println("[ERROR] Wrong count of arguments");
         }
-
-        System.out.printf("[INFO] Input three arguments: csvFilePath [%s] and htmlFilePath [%s] with reportName [%s]\n", pathSource, pathOutput, reportName);
-
-        // Payload
-        convertCsvToHtml(pathSource, pathOutput, reportName, marginIsExist, columnDelimiterSymbol, rowDelimiterSymbol);
     }
 
     public static void convertCsvToHtml(String csvFilePath, String htmlFilePath, String reportName, boolean marginIsExist, String columnDelimiterSymbol, String rowDelimiterSymbol) {
